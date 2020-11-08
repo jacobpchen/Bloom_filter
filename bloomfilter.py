@@ -14,16 +14,16 @@ class BloomFilter(object):
 
     def __init__(self, items_count, fp_prob):
         # Size of bit array to use 2^16
-        self.size = 65536
+        # self.size = 65536
+
+        # Size of bit array to use
+        self.size = self.get_size(items_count, fp_prob)
 
         # Number of items to add to the bloom filter
         self.items_count = items_count
 
         # False Positive probability
         self.fp_prob = fp_prob
-
-        # Size of bit array to use
-        # self.size = self.get_size(items_count, fp_prob)
 
         # number of hash functions to use
         self.hash_count = self.get_hash_count(self.size, self.items_count)
@@ -40,7 +40,7 @@ class BloomFilter(object):
 
         # Calculate p
         self.fp = pow(1-exp(-self.hash_count / (self.size / self.items_count)), self.hash_count)
-        print(self.fp)
+        # print(self.fp)
 
     @classmethod
     def get_size(self, n, p):
@@ -84,7 +84,7 @@ class BloomFilter(object):
         digest = result.hexdigest()
         print(digest)
 
-        #  split the digest into 10 - 4 hexadecimal digits
+        # Split the digest into 10 - 4 hexadecimal digits
         n = 4
         digests = [digest[i:i+n] for i in range(0, len(digest), n)]
         print(digests)
@@ -92,8 +92,7 @@ class BloomFilter(object):
         # Convert to the 4 hexadecimal digit to an integer between 0 - 65535
         for i in range(self.hash_count):
             bit = int(digests[i], 16)
-            print(str(bit) + ' ', end='')
-            # bit = bit % self.size
+            # print(str(bit) + ' ', end='')
             self.bit_array[bit] = True
 
     def check(self, item):
