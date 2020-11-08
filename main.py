@@ -8,12 +8,16 @@ p = .001
 bloomf = BloomFilter(n,p)
 print("Size of bit array:{}".format(bloomf.size))
 print("Size of the number of items in the bloom filter (m): ", n)
-print("False positive Probability:{}".format(bloomf.fp))
+print("False positive Probability:{:.6%}".format(bloomf.fp))
 print("Number of hash functions:{}".format(bloomf.hash_count))
 
+# Create a set of the weak passwords to test false positivity rate
+weak_passwords = set()
+
 f = open("weak_passwords.txt", "r")
-while True:
+for i in range(n):
     line = f.readline().strip()
+    weak_passwords.add(line)
     bloomf.add(line)
     if line == '':
         break
