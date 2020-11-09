@@ -14,7 +14,7 @@ print("Number of hash functions:{}".format(bloomf.hash_count))
 # Create a set of the weak passwords to test false positivity rate
 weak_passwords = set()
 
-f = open("weak_passwords.txt", "r")
+f = open("weak_passwords_5000.txt", "r")
 for i in range(n):
     line = f.readline().strip()
     weak_passwords.add(line)
@@ -30,3 +30,18 @@ while (True):
     else:
         print("Password successfully changed!")
         break
+
+counter = 0
+
+f = open("weak_passwords_100000.txt", "r")
+for i in range(0, 8000):
+    line = f.readline().strip()
+    print(i)
+    if bloomf.check(line):
+        # print(line, " is a weak password")
+        if line not in weak_passwords:
+            print("False positive!!")
+            print(line)
+            counter += 1
+
+print(counter)
