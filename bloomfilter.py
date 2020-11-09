@@ -82,12 +82,12 @@ class BloomFilter(object):
         # Convert the result to a hexadecimal
         # print("The hexadecimal equilvalent of SHA1 is:")
         digest = result.hexdigest()
-        print(digest)
+        # print(digest)
 
         # Split the digest into 10 - 4 hexadecimal digits
         n = 4
         digests = [digest[i:i+n] for i in range(0, len(digest), n)]
-        print(digests)
+        # print(digests)
 
         # Convert to the 4 hexadecimal digit to an integer between 0 - 65535
         for i in range(self.hash_count):
