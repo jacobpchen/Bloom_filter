@@ -2,13 +2,11 @@ from bloomfilter import BloomFilter
 # import math
 # Number of items to add in the bloom filter
 n = 5000
-# Desired false positivity rate
-p = .001
 
-bloomf = BloomFilter(n,p)
+bloomf = BloomFilter(n)
 print("Size of bit array:{}".format(bloomf.size))
 print("Size of the number of items in the bloom filter (m): ", n)
-print("False positive Probability:{:.6%}".format(bloomf.fp))
+print("False positive probability:{:.6%}".format(bloomf.fp))
 print("Number of hash functions:{}".format(bloomf.hash_count))
 
 # Create a set of the weak passwords to test false positivity rate
