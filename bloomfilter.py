@@ -11,29 +11,26 @@ class BloomFilter(object):
     '''
     Class for Bloom filter, using SHA1 hash function
     '''
-
-    def __init__(self, items_count, fp_prob):
+    # fp_prob
+    def __init__(self, items_count):
         # Size of bit array to use 2^16
-        # self.size = 65536
+        self.size = 65536
 
         # Size of bit array to use
-        self.size = self.get_size(items_count, fp_prob)
+        # self.size = self.get_size(items_count, fp_prob)
 
         # Number of items to add to the bloom filter
         self.items_count = items_count
 
         # False Positive probability
-        self.fp_prob = fp_prob
+        # self.fp_prob = fp_prob
 
         # number of hash functions to use
-        self.hash_count = self.get_hash_count(self.size, self.items_count)
+        #self.hash_count = self.get_hash_count(self.size, self.items_count)
+        self.hash_count = 11
 
         # Bit array of given size
         self.bit_array = bitarray(self.size)
-
-        # False Positivity rate
-        #self.fp_prob = self.get_false_positivity(self.size, items_count, self.hash_count)
-        #print(self.fp_prob)
 
         # initialize all bits as 0
         self.bit_array.setall(0)
@@ -75,25 +72,48 @@ class BloomFilter(object):
         '''
         Add an item in the filter
         '''
-        # SHA-1
-        # Encrypt the item using SHA1
-        result = hashlib.sha1(item.encode())
 
-        # Convert the result to a hexadecimal
-        # print("The hexadecimal equilvalent of SHA1 is:")
-        digest = result.hexdigest()
-        # print(digest)
+        '''
+            If the number of hash functions is < 10 use SHA-1
+        '''
+        if self.hash_count < 10:
+            # SHA-1
+            # Encrypt the item using SHA1
+            result = hashlib.sha1(item.encode())
 
-        # Split the digest into 10 - 4 hexadecimal digits
-        n = 4
-        digests = [digest[i:i+n] for i in range(0, len(digest), n)]
-        # print(digests)
+            # Convert the result to a hexadecimal
+            # print("The hexadecimal equilvalent of SHA1 is:")
+            digest = result.hexdigest()
+            # print(len(digest))
+            # print(digest)
 
-        # Convert to the 4 hexadecimal digit to an integer between 0 - 65535
-        for i in range(self.hash_count):
-            bit = int(digests[i], 16)
-            # print(str(bit) + ' ', end='')
-            self.bit_array[bit] = True
+            # Split the digest into 10 - 4 hexadecimal digits
+            n = 4
+            digests = [digest[i:i+n] for i in range(0, len(digest), n)]
+            # print(digests)
+
+            # Convert to the 4 hexadecimal digit to an integer between 0 - m
+            for i in range(self.hash_count):
+                bit = int(digests[i], 16)
+                # print(str(bit) + ' ', end='')
+                self.bit_array[bit] = True
+        else:
+            result = hashlib.sha256(item.encode())
+            # print("The hexadecimal equilvalent of SHA256 is:")
+            digest = result.hexdigest()
+            # print(len(digest))
+            # print(digest)
+
+            n = 4
+            digests = [digest[i:i + n] for i in range(0, len(digest), n)]
+            # print(digests)
+
+            # Convert to the 4 hexadecimal digit to an integer between 0 - m
+            for i in range(self.hash_count):
+                bit = int(digests[i], 16)
+                # print(str(bit) + ' ', end='')
+                self.bit_array[bit] = True
+
 
     def check(self, item):
         '''
